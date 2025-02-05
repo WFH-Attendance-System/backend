@@ -1,23 +1,35 @@
-const { Model } = require("sequelize");
+const { Model } = require("objection");
 
-module.exports = (sequelize, DataTypes) => {
-    class Department extends Model {
-        static associate(models) {
-            Department.hasMany(models.User, {
-                foreignKey: "dept_id",
-                as: "users",
-            });
-        }
+class Department extends Model {
+    static get tableName() {
+        return "department";
     }
-    Department.init(
-        {
-            name: DataTypes.STRING,
-        },
-        {
-            sequelize,
-            modelName: "Department",
-        }
-    );
-    return Department;
-};
 
+    static get jsonSchema() {
+        return {
+            type: "object",
+            required: ["name"],
+            properties: {
+                id: { type: "integer" },
+                name: { type: "string" },
+            },
+        };
+    }
+
+    static get relationMappings() {
+        const User = require("./user");
+
+        return {
+            users: {
+                relation: Model.HasManyRelation,
+                modelClass: User,
+                join: {
+                    from: "department.id",
+                    to: "user.dept_id",
+                },
+            },
+        };
+    }
+}
+
+module.exports = Department;
