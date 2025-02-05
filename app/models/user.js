@@ -1,25 +1,38 @@
-const { Model } = require("sequelize");
+const { Model } = require("objection");
 
-module.exports = (sequelize, DataTypes) => {
-    class User extends Model {
-        static associate(models) {
-            Users.belongsTo(models.Department, {
-                foreignKey: "dept_id",
-                as: "department",
-            });
-        }
+class User extends Model {
+    static get tableName() {
+        return "user";
     }
-    Users.init(
-        {
-            username: DataTypes.STRING,
-            email: DataTypes.STRING,
-            password: DataTypes.STRING,
-            dept_id: DataTypes.INTEGER,
-        },
-        {
-            sequelize,
-            modelName: "User",
-        }
-    );
-    return Users;
-};
+
+    static get jsonSchema() {
+        return {
+            type: "object",
+            required: ["username", "email", "password", "dept_id"],
+            properties: {
+                id: { type: "integer" },
+                username: { type: "string" },
+                email: { type: "string" },
+                password: { type: "string" },
+                dept_id: { type: "integer" },
+            },
+        };
+    }
+
+    static get relationMappings() {
+        const Department = require("./department");
+
+        return {
+            department: {
+                relation: Model.BelongsToOneRelation,
+                modelClass: Department,
+                join: {
+                    from: "user.dept_id",
+                    to: "department.id",
+                },
+            },
+        };
+    }
+}
+
+module.exports = User;
