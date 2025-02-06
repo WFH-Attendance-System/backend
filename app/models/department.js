@@ -20,7 +20,7 @@ class Department extends Model {
         const User = require("./user");
 
         return {
-            users: {
+            user: {
                 relation: Model.HasManyRelation,
                 modelClass: User,
                 join: {

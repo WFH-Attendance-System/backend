@@ -11,6 +11,9 @@ const environment = process.env.NODE_ENV || "development";
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
+const constants = require("./app/utils/constants");
+const controllers = require("./app/controllers");
+
 // Initialize knex
 const knex = Knex(knexConfig[environment]);
 
@@ -26,8 +29,12 @@ app.use(
         credentials: true,
     })
 );
-
+// Serve static files
+app.use("/images", express.static(constants.UPLOAD_DIR));
 app.use("/api", routes);
+
+app.use(controllers.main.onLost); //Error404
+app.use(controllers.main.onError); //Error500
 
 // Start server
 app.listen(PORT, (error) => {

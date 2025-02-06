@@ -54,6 +54,7 @@ async function findAllByDepartment(departmentName = null) {
             "user.email",
             "user.name",
             "user.phone_number",
+            "user.is_active",
             "department.name as department_name"
         );
 
@@ -77,8 +78,14 @@ async function updateUser(userId, body, userUpdating) {
         updated_at: new Date().toISOString(),
     });
 }
-async function deleteUser(userId) {
-    return await userModel.query().deleteById(userId);
+
+async function deleteUser(userId, userDeleting) {
+    return await userModel.query().patchAndFetchById(userId, {
+        refresh_token: null,
+        is_active: false,
+        deleted_at: new Date().toISOString(),
+        deleted_by: userDeleting.id,
+    });
 }
 
 async function checkPassword(hash, password) {

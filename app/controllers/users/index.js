@@ -87,6 +87,10 @@ async function updateUser(req, res) {
             req.user
         );
 
+        if (req.body.password || req.body.dept_id) {
+            await userService.logout(req.params.id);
+        }
+
         return res.json({
             message: "Success",
             data: updatedUser,
@@ -108,7 +112,7 @@ async function deleteUser(req, res) {
             });
         }
 
-        await userService.deleteUser(req.params.id);
+        await userService.deleteUser(req.params.id, req.user);
         return res.json({
             message: "Success",
         });

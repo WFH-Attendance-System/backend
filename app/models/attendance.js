@@ -8,20 +8,20 @@ class Attendance extends Model {
     static get jsonSchema() {
         return {
             type: "object",
-            required: ["name"],
+            required: ["user_id"],
             properties: {
                 id: { type: "integer" },
                 user_id: { type: "integer" },
-                check_in_time: { type: "datetime" },
+                check_in_time: { type: "string", format: "date-time" },
+                check_out_time: { type: "string", format: "date-time" },
             },
         };
     }
 
     static get relationMappings() {
         const User = require("./user");
-
         return {
-            users: {
+            user: {
                 relation: Model.BelongsToOneRelation,
                 modelClass: User,
                 join: {

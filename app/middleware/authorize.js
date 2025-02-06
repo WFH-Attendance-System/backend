@@ -11,6 +11,7 @@ async function authorize(req, res, next) {
         req.user = await userService.findOne(tokenPayload.id, [
             "user.id",
             "email",
+            "user.name as name",
             "username",
             "dept_id",
             "department.name as dept_name",
