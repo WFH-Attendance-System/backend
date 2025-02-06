@@ -16,6 +16,16 @@ async function createUser(body, user) {
         throw new Error("Semua kolom belum terisi");
     }
 
+    // check if there is any username or email that already exists
+    const userExists = await userModel
+        .query()
+        .where({ username })
+        .orWhere({ email })
+        .first();
+    if (userExists) {
+        throw new Error("Username or email already exists");
+    }
+
     return await userModel.query().insert({
         name,
         phone_number,
