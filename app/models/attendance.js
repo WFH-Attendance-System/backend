@@ -25,7 +25,7 @@ class Attendance extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: User,
                 join: {
-                    from: "attendance.id",
+                    from: "attendance.user_id",
                     to: "user.id",
                 },
             },

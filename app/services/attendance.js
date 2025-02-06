@@ -4,32 +4,59 @@ const attendanceModel = require("../models/attendance");
 async function findAll(params, user) {
     // filter by userid, departement name, user name (employee name)
     const { userId, dept, name } = params;
-    const query = attendanceModel.query().joinRelated("[user.department]");
+    const query = attendanceModel
+        .query()
+        .joinRelated("user.department")
+        .select(
+            "attendance.id",
+            "user.name as employee_name",
+            "user:department.name as department_name",
+            "check_in_time",
+            "check_out_time",
+            "check_in_photo",
+            "check_out_photo"
+        );
 
     if (userId) {
-        query.findAll({ "user.id": userId });
+        query.where({ "user.id": userId });
     }
 
     if (dept) {
-        query.findAll({ "department.name": dept });
+        query.where({ "user:department.name": dept });
     }
 
     if (name) {
-        query.whereRaw('UPPER("user"."name") LIKE ?', [
-            `%${name.toUpperCase()}%`,
-        ]);
+        query.whereRaw("UPPER(user.name) LIKE ?", [`%${name.toUpperCase()}%`]);
     }
 
     // Only select their own data
     if (user.dept_name == constants.DEPT_STAFF_NAME) {
-        query.findAll({ "user.id": user.id });
+        query.where("user.id", user.id);
     }
 
     return await query;
 }
 
-async function findById(id) {
-    return await attendanceModel.query().findById(id);
+async function findById(id, user) {
+    const query = attendanceModel
+        .query()
+        .joinRelated("user.department")
+        .select(
+            "attendance.id",
+            "user.name as employee_name",
+            "user:department.name as department_name",
+            "check_in_time",
+            "check_out_time",
+            "check_in_photo",
+            "check_out_photo"
+        )
+        .where("attendance.id", id);
+
+    if (user.dept_name == constants.DEPT_STAFF_NAME) {
+        query.andWhere("user.id", user.id);
+    }
+
+    return await query;
 }
 
 async function addAttendance(userId, datetime, path) {
@@ -65,7 +92,6 @@ async function addAttendance(userId, datetime, path) {
         });
     }
 }
-
 
 module.exports = {
     findAll,

@@ -22,7 +22,7 @@ async function getAttendances(req, res) {
 
 async function getAttendanceById(req, res) {
     try {
-        const attendance = await attendanceService.findById(req.params.id);
+        const attendance = await attendanceService.findById(req.params.id, req.user);
         return res.json({
             message: "Success",
             data: attendance,
