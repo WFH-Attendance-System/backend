@@ -4,7 +4,7 @@
  */
 exports.up = function (knex) {
     return knex.schema.alterTable("user", (table) => {
-        table.string("refresh_token", 255);
+        table.string("refresh_token", 400);
     });
 };
 
