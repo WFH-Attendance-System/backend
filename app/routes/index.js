@@ -13,6 +13,7 @@ apiRouter.get("/", function(req, res){
 
 // AUTH
 apiRouter.post("/auth/login", controllers.auth.login);
+apiRouter.get("/auth/refresh-token", controllers.auth.refreshToken);
 apiRouter.post("/auth/logout", authorize, controllers.auth.logout);
 apiRouter.get("/auth/whoami", authorize, controllers.auth.whoAmI);
 

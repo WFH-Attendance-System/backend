@@ -42,17 +42,13 @@ async function findOne(id, columns = null) {
     const model = userModel
         .query()
         .joinRelated("department")
-        .findOne({ "user.id": id });
+        .findOne(id);
 
     if (columns) {
         model.select(columns);
     }
 
     return await model;
-}
-
-async function findByEmail(email) {
-    return await userModel.query().findOne({ email });
 }
 
 async function findAllByDepartment(departmentName = null) {
@@ -119,7 +115,6 @@ async function logout(userId) {
 module.exports = {
     createUser,
     findOne,
-    findByEmail,
     findAllByDepartment,
     updateUser,
     deleteUser,

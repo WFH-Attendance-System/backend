@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 const userService = require("../services/user");
-const userModel = require("../models/user");
 
 async function authorize(req, res, next) {
     try {
@@ -8,18 +7,24 @@ async function authorize(req, res, next) {
         const token = bearerToken?.split("Bearer ")[1];
         const tokenPayload = jwt.verify(token, process.env.JWT_SECRET);
 
-        req.user = await userService.findOne(tokenPayload.id, [
+        req.user = await userService.findOne({ "user.id": tokenPayload.id }, [
             "user.id",
             "email",
             "user.name as name",
             "username",
             "dept_id",
             "department.name as dept_name",
+            "refresh_token",
         ]);
+
+        if (!req.user.refresh_token) {
+            throw new Error("Unauthorized");
+        }
 
         next();
     } catch (err) {
         console.log(err);
+        res.clearCookie("refresh_token");
         res.status(401).json({
             message: "Unauthorized",
         });
