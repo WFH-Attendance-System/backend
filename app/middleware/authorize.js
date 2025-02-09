@@ -15,7 +15,12 @@ async function authorize(req, res, next) {
             "dept_id",
             "department.name as dept_name",
             "refresh_token",
+            "is_active"
         ]);
+
+        if(!req.user.is_active) {
+            throw new Error("User is not active");
+        }
 
         if (!req.user.refresh_token) {
             throw new Error("Unauthorized");

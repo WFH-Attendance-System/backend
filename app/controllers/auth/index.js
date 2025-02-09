@@ -46,6 +46,10 @@ async function login(req, res) {
             throw new Error("Email atau password salah");
         }
 
+        if(!user.is_active) {
+            throw new Error("User is not active");
+        }
+
         const isPasswordCorrect = await checkPassword(user.password, password);
         if (!isPasswordCorrect) {
             throw new Error("Email atau password salah");
