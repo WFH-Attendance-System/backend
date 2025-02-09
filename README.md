@@ -16,6 +16,14 @@ This is the backend of the WFH Attendance System. It is built using Express.js a
     - `JWT_REFRESH_SECRET`
 4. Update front-end URL in `server.js` file (line 28)
 5. Run `npm run migrate:refresh` to create the database tables (and seeders)
+    - User created 1:
+        - Email: `admin@gmail.com`
+        - Password: `admin`
+        - Dept: `admin`
+    - User created 2:
+        - Email: `hrd@gmail.com`
+        - Password: `hrd`
+        - Dept: `hrd`
 6. Run `npm run dev` to start the server
 7. By default, the server will be running on `http://localhost:3000`
 8. Testings can be done using Postman using this [file](./Postman%20Collection.postman_collection.json) by importing it to Postman then update the environment variables.
