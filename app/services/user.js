@@ -39,10 +39,19 @@ async function createUser(body, user) {
 }
 
 async function findOne(id, columns = null) {
-    const model = userModel
-        .query()
-        .joinRelated("department")
-        .findOne(id);
+    const model = userModel.query().joinRelated("department").findOne(id);
+    if (!columns) {
+        columns = [
+            "user.id",
+            "user.email",
+            "user.username",
+            "user.name",
+            "user.phone_number",
+            "user.is_active",
+            "user.dept_id",
+            "department.name as department_name",
+        ];
+    }
 
     if (columns) {
         model.select(columns);

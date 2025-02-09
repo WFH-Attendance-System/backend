@@ -21,7 +21,7 @@ apiRouter.get("/auth/whoami", authorize, controllers.auth.whoAmI);
 apiRouter.get("/users", authorize, allowAccess([constants.DEPT_IT_NAME, constants.DEPT_HRD_NAME]), controllers.users.getUsers);
 apiRouter.post("/users", authorize, allowAccess([constants.DEPT_IT_NAME, constants.DEPT_HRD_NAME]), controllers.users.createUser);
 apiRouter.get("/users/:id", authorize, controllers.users.getUserById);
-apiRouter.patch("/users/:id", authorize, controllers.users.updateUser);
+apiRouter.patch("/users/:id", authorize, allowAccess([constants.DEPT_IT_NAME, constants.DEPT_HRD_NAME]), controllers.users.updateUser);
 apiRouter.delete("/users/:id", authorize, allowAccess([constants.DEPT_IT_NAME, constants.DEPT_HRD_NAME]), controllers.users.deleteUser);
 
 // ATTENDANCE

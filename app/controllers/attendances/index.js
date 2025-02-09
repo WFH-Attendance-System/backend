@@ -2,7 +2,7 @@ const attendanceService = require("../../services/attendance");
 const fileService = require("../../services/file");
 
 async function getAttendances(req, res) {
-    // filter by: userid, dept, user -> name
+    // filter by: userid, dept, user -> name, latest = true/false, date
     try {
         const attendances = await attendanceService.findAll(
             req.query,

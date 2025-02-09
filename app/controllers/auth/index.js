@@ -54,6 +54,7 @@ async function login(req, res) {
         const payload = {
             id: user.id,
             email: user.email,
+            name: user.name,
             dept_id: user.dept_id,
             dept_name: user.dept_name,
             createdAt: user.created_at,
@@ -70,7 +71,7 @@ async function login(req, res) {
             data: {
                 id: user.id,
                 email: user.email,
-                nama: user.nama,
+                nama: user.name,
                 token,
                 createdAt: user.created_at,
                 updatedAt: user.updated_at,
@@ -121,6 +122,7 @@ async function refreshToken(req, res) {
         const payload = {
             id: user.id,
             email: user.email,
+            name: user.name,
             dept_id: user.dept_id,
             dept_name: user.dept_name,
             createdAt: user.created_at,

@@ -29,7 +29,7 @@ async function getUserById(req, res) {
             });
         }
 
-        const user = await userService.findOne({"id": req.params.id});
+        const user = await userService.findOne({ "user.id": req.params.id });
         if (!user) {
             return res.status(404).json({
                 message: "User not found",
@@ -65,7 +65,7 @@ async function createUser(req, res) {
 
 async function updateUser(req, res) {
     try {
-        const user = await userService.findOne({"id": req.params.id});
+        const user = await userService.findOne({ "user.id": req.params.id });
         if (!user) {
             return res.status(404).json({
                 message: "User not found",
@@ -73,7 +73,7 @@ async function updateUser(req, res) {
         }
 
         if (
-            req.user.dept_name != constants.DEPT_IT_NAME &&
+            req.user.dept_name == constants.DEPT_STAFF_NAME &&
             req.user.id != req.params.id
         ) {
             return res.status(403).json({
@@ -105,7 +105,7 @@ async function updateUser(req, res) {
 
 async function deleteUser(req, res) {
     try {
-        const user = await userService.findOne({"id": req.params.id});
+        const user = await userService.findOne({ id: req.params.id });
         if (!user) {
             return res.status(404).json({
                 message: "User not found",

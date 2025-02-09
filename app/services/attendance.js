@@ -2,8 +2,8 @@ const constants = require("../utils/constants");
 const attendanceModel = require("../models/attendance");
 
 async function findAll(params, user) {
-    // filter by userid, departement name, user name (employee name)
-    const { userId, dept, name } = params;
+    // filter by userid, departement name, user name (employee name), latest = true/false
+    const { userId, dept, name, latest, date } = params;
     const query = attendanceModel
         .query()
         .joinRelated("user.department")
@@ -27,6 +27,14 @@ async function findAll(params, user) {
 
     if (name) {
         query.whereRaw("UPPER(user.name) LIKE ?", [`%${name.toUpperCase()}%`]);
+    }
+
+    if (latest) {
+        query.orderBy("attendance.id", "desc");
+    }
+
+    if (date) {
+        query.whereRaw("DATE(check_in_time) = ?", [date]);
     }
 
     // Only select their own data
@@ -62,6 +70,14 @@ async function findById(id, user) {
 async function addAttendance(userId, datetime, path) {
     const dateObject = new Date(datetime).toISOString();
 
+    // datetime not today & not this month
+    if (
+        datetime.getDate() != new Date().getDate() &&
+        datetime.getMonth() != new Date().getMonth()
+    ) {
+        throw new Error("Photo must be taken today");
+    }
+
     // Check if there is any attendance data with the same user_id and check_in_time
     const checkin = await attendanceModel
         .query()
@@ -72,6 +88,10 @@ async function addAttendance(userId, datetime, path) {
     // if checkin is found and checkout data is found, then return error
     if (checkin && checkin.check_out_time) {
         throw new Error("Attendance data already exists");
+    }
+
+    if (checkin && new Date(checkin.check_in_time) >= new Date(dateObject)) {
+        throw new Error("Check Out time can't be earlier than Check In time");
     }
 
     if (!checkin) {
